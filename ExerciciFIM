@@ -1,0 +1,83 @@
+
+CREATE TABLE if not exists Pais (
+    paisid serial primary key,
+    name VARCHAR(255)
+);
+
+CREATE TABLE if not exists Circuito (
+    circuitoid serial primary key,
+    name VARCHAR(255),
+    id_pais INT not null,
+    FOREIGN KEY (id_pais) REFERENCES Pais(paisid)
+);
+
+CREATE TABLE if not exists Marca (
+    marcaid serial primary key,
+    name VARCHAR(255)
+);
+
+CREATE TABLE if not exists Resultado (
+    resultadoid serial primary key,
+    incidencias VARCHAR(255),
+    resultado VARCHAR(255)
+);
+
+CREATE TABLE if not exists Piloto (
+    pilotoId serial primary key,
+    name varchar(255) not null,
+    id_pais INT not null,
+    id_dorsal INT not null,
+    FOREIGN KEY (id_pais) REFERENCES Pais(paisid)
+);
+
+CREATE TABLE if not exists Equipo (
+    equipoid serial primary key,
+    name varchar(255) not null,
+    id_marca INT not null,
+    id_pais INT not null,
+    FOREIGN KEY (id_marca) REFERENCES Marca(marcaid),
+    FOREIGN KEY (id_pais) REFERENCES Pais(paisid)
+);
+
+CREATE TABLE if not exists Persona (
+    DNI int primary key,
+    name VARCHAR(255),
+    id_equipo INT not null,
+    FOREIGN KEY (id_equipo) REFERENCES Equipo(equipoid)
+);
+
+CREATE TABLE if not exists piloto_equipo (
+    peid serial primary key,
+    dorsal int not null,
+    id_piloto INT not null,
+    id_equipo INT not null,
+    FOREIGN KEY (id_piloto) REFERENCES Piloto(pilotoid),
+    FOREIGN KEY (id_equipo) REFERENCES Equipo(equipoid)
+);
+
+CREATE TABLE if not exists piloto_circuito (
+    pcid serial primary key,
+    tiempo VARCHAR(255),
+    Fecha VARCHAR(255),
+    id_piloto INT not null,
+    id_circuito INT not null,
+    FOREIGN KEY (id_piloto) REFERENCES Piloto(pilotoid),
+    FOREIGN KEY (id_circuito) REFERENCES Circuito(circuitoid)
+);
+
+CREATE TABLE if not exists GP (
+    GPid serial primary key,
+    name VARCHAR(255),
+    id_circuito INT not null,
+    FOREIGN KEY (id_circuito) REFERENCES Circuito(circuitoid)
+);
+
+CREATE TABLE if not exists GP_resultado_piloto (
+    GPrpid serial primary key,
+    id_piloto INT not null,
+    id_GP INT not null,
+    id_resultado INT not null,
+    FOREIGN KEY (id_piloto) REFERENCES Piloto(pilotoid),
+    FOREIGN KEY (id_GP) REFERENCES GP(GPid),
+    FOREIGN KEY (id_resultado) REFERENCES Resultado(resultadoid)
+);
